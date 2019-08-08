@@ -260,6 +260,10 @@ bool BaseConf::WriteBack() {
   WritableFile *write_file;
   std::string tmp_path = rep_->path + ".tmp";
   Status ret = NewWritableFile(tmp_path, &write_file);
+  if (!ret.ok()) {
+    log_warn("ret %s", ret.ToString().c_str());
+    return false;
+  }
   log_info("ret %s", ret.ToString().c_str());
   std::string tmp;
   for (size_t i = 0; i < rep_->item.size(); i++) {
@@ -280,6 +284,9 @@ void BaseConf::WriteSampleConf() const {
   WritableFile *write_file;
   std::string sample_path = rep_->path + ".sample";
   Status ret = NewWritableFile(sample_path, &write_file);
+  if (!ret.ok()) {
+    return;
+  }
   std::string tmp;
   for (size_t i = 0; i < rep_->item.size(); i++) {
     if (rep_->item[i].type == Rep::kConf) {
